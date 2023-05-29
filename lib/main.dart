@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'pages/first_flutter_app.dart';
 import 'pages/trace.dart';
 import 'pages/map.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: "assets/.env");
   runApp(MyApp());
 }
 
@@ -34,6 +36,11 @@ class MainPage extends StatefulWidget {
 
 class _MyHomePageState extends State<MainPage> {
   var _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

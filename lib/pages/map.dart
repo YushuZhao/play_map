@@ -1,10 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:amap_flutter_map/amap_flutter_map.dart';
 import 'package:amap_flutter_base/amap_flutter_base.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:amap_flutter_location/amap_location_option.dart';
-import 'package:amap_flutter_location/amap_flutter_location.dart';
-import 'dart:math';
+
+import '../location/amap_helper.dart';
 
 class AmapConfig {
   // 高德地图 key
@@ -25,24 +25,13 @@ class _MapPage extends State<MapPage> {
   AMapController? _mapController;
 
   // Marker
-  static const LatLng mapCenter = LatLng(39.909187, 116.397451);
+  LatLng mapCenter = LatLng(39.909187, 116.397451);
   final Map<String, Marker> _initMarkerMap = <String, Marker>{};
 
   @override
   void initState() {
     super.initState();
-    _requestLocaitonPermission();
-  }
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    _requestLocaitonPermission();
-  }
-
-  void _requestLocaitonPermission() async {
-    PermissionStatus status = await Permission.location.request();
-    print('permissionStatus=================> $status');
+    AMapHelper.setApiKey();
   }
 
   void onMapCreated(AMapController controller) {
@@ -62,15 +51,6 @@ class _MapPage extends State<MapPage> {
     print('地图审图号（普通地图）: $mapContentApprovalNumber');
     print('地图审图号（卫星地图): $satelliteImageApprovalNumber');
   }
-
-  /// 设置定位参数
-  void setLocationOption(AMapLocationOption locationOption) {}
-
-  void startLocation() {}
-
-  void stopLocation() {}
-
-  void destroy() {}
 
   @override
   Widget build(BuildContext context) {
@@ -97,9 +77,8 @@ class _MapPage extends State<MapPage> {
             circleStrokeWidth: 10));
 
     return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: map,
-    );
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: map);
   }
 }
