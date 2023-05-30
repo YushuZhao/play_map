@@ -74,11 +74,17 @@ class AMapHelper {
     location.setLocationOption(locationOption);
   }
 
-  Future<AMapPosition?> startLocation() async {
+  Future<AMapPosition> startLocation() async {
     bool p = await requestLocationPermission();
     print('has permission: $p');
     if (!p) {
-      return null;
+      return AMapPosition(
+          id: '',
+          name: '',
+          latLng: LatLng(0.0, 0.0),
+          address: '',
+          adCode: '',
+          distance: '');
     }
     location.startLocation();
     return completer.future;
