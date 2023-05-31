@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:amap_flutter_base/amap_flutter_base.dart';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:play_map/helper/permission.dart';
 
 class AMapHelper {
@@ -30,7 +32,7 @@ class AMapHelper {
     completer = Completer();
     Stream<Map<String, Object>> stream = onLocationChanged(location);
     stream.listen((Map<String, Object> result) {
-      print("AMapHelper listen result ${result.toString()}");
+      debugPrint("AMapHelper listen result ${result.toString()}");
       double longitude = double.tryParse(result['longitude'].toString()) ?? 0;
       double latitude = double.tryParse(result['latitude'].toString()) ?? 0;
       String address = result['address'].toString();
@@ -86,6 +88,7 @@ class AMapHelper {
           adCode: '',
           distance: '');
     }
+    init();
     location.startLocation();
     return completer.future;
   }
