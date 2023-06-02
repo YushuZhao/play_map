@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'pages/first_flutter_app.dart';
 import 'pages/trace.dart';
 import 'pages/map.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: "assets/.env");
   runApp(MyApp());
 }
 
@@ -34,31 +36,29 @@ class MainPage extends StatefulWidget {
 
 class _MyHomePageState extends State<MainPage> {
   var _currentIndex = 0;
+  final pageList = [MapPage(), TracePage()];
+  final bottomNavigationBarList = <BottomNavigationBarItem>[
+    BottomNavigationBarItem(icon: Icon(Icons.map), label: ('地图')),
+    BottomNavigationBarItem(icon: Icon(Icons.history), label: ('轨迹'))
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget page;
-    switch (_currentIndex) {
-      case 0:
-        page = MapPage();
-        break;
-      case 1:
-        page = TracePage();
-        break;
-      case 2:
-        page = Placeholder();
-        break;
-      default:
-        throw UnimplementedError('no widget for $_currentIndex');
-    }
-
     return MaterialApp(
       title: 'play_map',
       home: Scaffold(
         appBar: AppBar(
           title: const Text('play_map'),
         ),
-        body: page,
+        body: IndexedStack(
+          index: _currentIndex,
+          children: pageList,
+        ),
         bottomNavigationBar: BottomNavigationBar(
             currentIndex: _currentIndex,
             onTap: (value) {
@@ -68,12 +68,7 @@ class _MyHomePageState extends State<MainPage> {
               print("value = $value");
             },
             type: BottomNavigationBarType.fixed,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(icon: Icon(Icons.map), label: ('地图')),
-              BottomNavigationBarItem(icon: Icon(Icons.history), label: ('轨迹')),
-              // BottomNavigationBarItem(
-              //     icon: Icon(Icons.person_outline), label: ('我')),
-            ],
+            items: bottomNavigationBarList,
             selectedItemColor: Colors.amber[800]),
       ),
     );

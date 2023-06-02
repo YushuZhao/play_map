@@ -6,6 +6,28 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+// keystore start
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withReader('UTF-8') { reader ->
+        keystoreProperties.load(reader)
+    }
+}
+
+def debugKeystoreFilePath = keystoreProperties.getProperty('debug.keystore.filepath')
+def debugKeystoreStorePassword = keystoreProperties.getProperty('debug.keystore.store.password')
+def debugKeystoreKeyPassword = keystoreProperties.getProperty('debug.keystore.key.password')
+def debugKeystoreAlias = keystoreProperties.getProperty('debug.keystore.key.alias')
+
+def releaseKeystoreFilePath = keystoreProperties.getProperty('release.keystore.filepath')
+def releaseKeystoreStorePassword = keystoreProperties.getProperty('release.keystore.store.password')
+def releaseKeystoreKeyPassword = keystoreProperties.getProperty('release.keystore.key.password')
+def releaseKeystoreAlias = keystoreProperties.getProperty('release.keystore.key.alias')
+
+// keystore end
+
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
@@ -59,8 +81,30 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file(releaseKeystoreFilePath)
+            storePassword releaseKeystoreStorePassword
+            keyAlias releaseKeystoreAlias
+            keyPassword releaseKeystoreKeyPassword
+        }
+        debug {
+            storeFile file(debugKeystoreFilePath)
+            storePassword debugKeystoreStorePassword
+            keyAlias debugKeystoreAlias
+            keyPassword debugKeystoreKeyPassword
+        }
+    }
+
     buildTypes {
         release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.release
+            minifyEnabled false //删除无用代码
+            shrinkResources false //删除无用资源
+        }
+        debug {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.debug
