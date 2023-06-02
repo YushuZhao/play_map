@@ -19,6 +19,7 @@ class AMapHelper {
   static void init() {
     updatePrivacyShow(true, true);
     updatePrivacyAgree(true);
+    setApiKey();
   }
 
   static void setApiKey() {
