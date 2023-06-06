@@ -30,7 +30,10 @@ class _MapLocationPickerState extends State<MapLocationPicker>
   AMapController? _controller;
 
   CustomStyleOptions customStyleOptions = CustomStyleOptions(false);
-  MyLocationStyleOptions myLocationStyleOptions = MyLocationStyleOptions(true);
+  MyLocationStyleOptions myLocationStyleOptions = MyLocationStyleOptions(true,
+      circleStrokeColor: Colors.transparent,
+      circleStrokeWidth: 0.0,
+      circleFillColor: Colors.transparent);
 
   LatLng _currentCenterCoordinate = const LatLng(39.909187, 116.397451);
   CameraPosition _kInitialPosition = const CameraPosition(
@@ -58,6 +61,11 @@ class _MapLocationPickerState extends State<MapLocationPicker>
     setState(() {
       _controller = controller;
     });
+  }
+
+  void onLocationChanged(AMapLocation location) {
+    print('on location changed: ${location.toString()}');
+    _currentCenterCoordinate = location.latLng;
   }
 
   /// 获取审图号
