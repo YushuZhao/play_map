@@ -35,6 +35,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="567436eaeea04e732abf8efb1215fc3b" />
+        <service android:name="com.amap.api.location.APSService"></service>    
     </application>
     <!--允许访问网络，必选权限-->
     <uses-permission android:name="android.permission.INTERNET" />  
