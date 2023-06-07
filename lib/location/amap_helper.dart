@@ -31,28 +31,6 @@ class AMapHelper {
   AMapHelper._internal() {
     location = AMapFlutterLocation();
     completer = Completer();
-    Stream<Map<String, Object>> stream = onLocationChanged(location);
-    stream.listen((Map<String, Object> result) {
-      debugPrint("AMapHelper listen result ${result.toString()}");
-      double longitude = double.tryParse(result['longitude'].toString()) ?? 0;
-      double latitude = double.tryParse(result['latitude'].toString()) ?? 0;
-      String address = result['address'].toString();
-
-      AMapPosition p = AMapPosition(
-        latLng: LatLng(latitude, longitude),
-        id: '',
-        name: '',
-        address: address,
-        adCode: result['adCode'].toString(),
-        distance: '',
-      );
-
-      if (!completer.isCompleted) {
-        completer.complete(p);
-      }
-
-      stopLocation(location);
-    });
   }
 
   static void updatePrivacyShow(bool hasContains, bool hasShow) {
@@ -102,8 +80,10 @@ class AMapHelper {
     location.destroy();
   }
 
-  Stream<Map<String, Object>> onLocationChanged(AMapFlutterLocation location) {
-    return location.onLocationChanged();
+  void onLocationChanged(locationResultCallBack) {
+    location
+        .onLocationChanged()
+        .listen((Map<String, Object> result) => locationResultCallBack(result));
   }
 }
 
