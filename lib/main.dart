@@ -3,7 +3,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'pages/first_flutter_app.dart';
 import 'pages/trace.dart';
 import 'pages/map.dart';
 
@@ -30,6 +29,10 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+class MyAppState extends ChangeNotifier {
+  //   notifyListeners();
 }
 
 class MainPage extends StatefulWidget {
