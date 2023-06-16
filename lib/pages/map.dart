@@ -1,7 +1,5 @@
 import 'package:amap_flutter_base/amap_flutter_base.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 
 import '../location/amap_helper.dart';
 import '../location/widget.dart';
@@ -18,7 +16,6 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    initDatabase();
     getPosition();
     getLocationListener();
   }
@@ -27,64 +24,18 @@ class _MapPageState extends State<MapPage> {
     position = AMapHelper().startLocation();
   }
 
-  void locationResultCallBack(result) async {
-    print('位置改变后的回调:=================>');
-    print(result);
+  void locationResultCallBack(result) {
+    // print("=====================");
+    // print(result);
     double longitude = double.tryParse(result['longitude'].toString()) ?? 0;
     double latitude = double.tryParse(result['latitude'].toString()) ?? 0;
-    Map<String, double> location = {
-      'latitude': latitude,
-      'longitude': longitude,
-    };
-    // 将获取到的地理位置信息存入本地数据库
-    // await insertLocation(location);
     setState(() {
       latlng = LatLng(latitude, longitude);
     });
-    // print(await queryLocation());
   }
 
   Future<void> getLocationListener() async {
     AMapHelper().onLocationChanged(locationResultCallBack);
-  }
-
-  late final Database database;
-
-  Future<void> initDatabase() async {
-    database = await openDatabase(
-      join(await getDatabasesPath(), 'location_database.db'),
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE location (id INTEGER PRIMARY KEY AUTOINCREMENT, latitude DOUBLE, longitude DOUBLE)',
-        );
-      },
-      version: 1,
-    );
-    List location = await queryLocation();
-    print('Location:=================>');
-    for (int i = 0; i < location.length; i++) {
-      print(location[i].toString());
-    }
-  }
-
-  Future<void> insertLocation(Map<String, double> location) async {
-    await database.insert(
-      'location',
-      location,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> queryLocation() async {
-    final List<Map<String, dynamic>> maps = await database.query('location');
-
-    return List.generate(maps.length, (i) {
-      return {
-        'id': maps[i]['id'],
-        'latitude': maps[i]['latitude'],
-        'longitude': maps[i]['longitude'],
-      };
-    });
   }
 
   @override
